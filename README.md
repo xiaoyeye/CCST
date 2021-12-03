@@ -1,7 +1,7 @@
 # CCST
 The code is licensed under the MIT license. 
 
-1. Requirements 
+# 1. Requirements 
 
 1.1 Operating systems:
 
@@ -22,7 +22,9 @@ scanorama==1.7.1
 
 1.3 GPU is required for training.
 
-2. Intructions of usage: demo code is runing on MERFISH.
+
+
+# 2. Intructions of usage: demo code is runing on MERFISH.
 
 2.1 Raw data is put in the folder "merfish". Need to be extracted firstly.
 
@@ -35,7 +37,7 @@ scanorama==1.7.1
 2.5 Run Time to use for training and clustering: 284 seconds on GPU RTX 3090. GPU Memory usage: 1635MiB 
 
 
-3. Download all datasets used in CCST:
+# 3. Download all datasets used in CCST:
 
 3.1 MERFISH
 
