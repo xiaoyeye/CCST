@@ -4,7 +4,7 @@ Taking advantages of two recent technical development, spatial transcriptomics a
 
 Framework
 
-![image](https://github.com/xiaoyeye/CCST/blob/main/figure/figure1.png) 
+![image](https://github.com/xiaoyeye/CCST/tree/main/figure/figure1.png)
 
 
 The code is licensed under the MIT license. 
@@ -31,11 +31,13 @@ pytorch== 1.7.1
 
 torch_geometric==1.6.3
 
+torch_sparse==0.6.8
+
 seaborn==0.11.1
 
-pickle==4.0
-
 scanorama==1.7.1
+
+openpyxl==3.0.7
 
 1.3 GPU is required for training.
 
