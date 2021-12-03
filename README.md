@@ -1,4 +1,12 @@
-# CCST
+# CCST：Cell clustering for spatial transcriptomics data with graph neural network 
+
+Taking advantages of two recent technical development, spatial transcriptomics and graph neural network, we  thus introduce CCST, Cell Clustering for Spatial Transcriptomics data with graph neural network, an unsupervised cell clustering method based on graph convolutional network to improve ab initio cell clustering and discovering of novel sub cell types based on curated cell category annotation. CCST is a general framework for dealing with various kinds of spatially resolved transcriptomics.
+
+Framework
+
+![image](https://github.com/xiaoyeye/CCST/tree/main/figure/figure1.png)
+
+
 The code is licensed under the MIT license. 
 
 # 1. Requirements 
