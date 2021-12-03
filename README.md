@@ -58,15 +58,15 @@ scanorama==1.7.1
 
 3.1 MERFISH
 
-Data are avalieble at https://www.pnas.org/content/116/39/19490/tab-figures-data 
+Data is avalieble at https://www.pnas.org/content/116/39/19490/tab-figures-data 
 
 3.2 DLPFC
 
-Data are avalieble at https://research.libd.org/spatialLIBD/
+Data is avalieble at https://research.libd.org/spatialLIBD/
 
 3.3 SeqFISH+
 
-Data are avalieble at https://github.com/CaiGroup/seqFISH-PLUS. 
+Data is avalieble at https://github.com/CaiGroup/seqFISH-PLUS. 
 
 3.4 10x Visium spatial transcriptomics data of human breast cancer
 
