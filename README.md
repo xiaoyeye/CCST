@@ -33,7 +33,7 @@ scanorama==1.7.1
 
 
 
-# 2. Intructions of usage: demo code is runing on MERFISH.
+# 2. Intructions of usage: demo code is tested on MERFISH.
 
 2.1 Raw data is put in the folder "merfish". Need to be extracted firstly.
 
