@@ -33,11 +33,15 @@ torch_geometric==1.6.3
 
 torch_sparse==0.6.8
 
+torch_scatter==2.0.5
+
 seaborn==0.11.1
 
 scanorama==1.7.1
 
 openpyxl==3.0.7
+
+umap-learn==0.5.1
 
 1.3 GPU is required for training.
 
