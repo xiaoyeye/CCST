@@ -4,7 +4,7 @@ Taking advantages of two recent technical development, spatial transcriptomics a
 
 Framework
 
-![image](https://github.com/xiaoyeye/CCST/tree/main/figure/figure1.png)
+![image](https://github.com/xiaoyeye/CCST/blob/main/figure/figure1.png)
 
 
 The code is licensed under the MIT license. 
