@@ -10,14 +10,23 @@ The code in python has been tested on both linux (Ubuntu 16.04.6 LTS) and window
 1.2 Required packages in python: 
 
 numpy==1.19.2
+
 pandas==1.2.3
+
 sklearn==0.24.1
+
 matplotlib==3.3.4
+
 scipy==1.7.0
+
 pytorch== 1.7.1
+
 torch_geometric==1.6.3
+
 seaborn==0.11.1
+
 pickle==4.0
+
 scanorama==1.7.1
 
 1.3 GPU is required for training.
