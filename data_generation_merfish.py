@@ -34,11 +34,14 @@ def get_adj(data_path):
 
             sheet_X = [item.value for item in list(worksheet.columns)[1]]
             sheet_X = sheet_X[1:]
+            sheet_X[sheet_X == ''] = 0.0
             sheet_Y = [item.value for item in list(worksheet.columns)[2]]
             sheet_Y = sheet_Y[1:]
+            sheet_Y[sheet_Y == ''] = 0.0
             sheet_X = np.array(sheet_X).astype(np.float)
             sheet_Y = np.array(sheet_Y).astype(np.float)
-
+            #all_X = np.array([n for a in all_X for n in a]).astype(np.float)
+            #all_Y = np.array([n for a in all_Y for n in a]).astype(np.float)
 
             sheet_num_cells = len(sheet_X)
             num_cells += sheet_num_cells
@@ -73,7 +76,7 @@ def get_adj(data_path):
     print('num_cells:', num_cells)
     for threshold in [200]:
         num_big = np.where(all_distance_array<threshold)[0].shape[0]
-        print (threshold,num_big,str(num_big/(num_cells*2)))
+        print (threshold,num_big,str(num_big/(num_cells)))
         distance_matrix_threshold_I_list = []
         distance_matrix_threshold_W_list = []
         from sklearn.metrics.pairwise import euclidean_distances
@@ -203,10 +206,10 @@ def normalization(features):
 
 
 
-def remove_low_var_gene(features_input, gene_names):
+def remove_low_var_gene(features_input, gene_names, thres=0.4): # thres=1
     each_feature_var = features_input.var(0)
     tmp_var = np.arange(len(each_feature_var))
-    indeces_after_removal = tmp_var[each_feature_var>=1]
+    indeces_after_removal = tmp_var[each_feature_var>=thres] 
     features_after_removal = features_input[:,indeces_after_removal]
     gene_names_after_removal = gene_names[indeces_after_removal]
     print(features_after_removal.shape)
