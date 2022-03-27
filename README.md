@@ -49,16 +49,16 @@ umap-learn==0.5.1
 
 ## 2.1 Raw data 
 
-Raw data is put in the folder "merfish". Need to be extracted firstly.
+Raw data is put in the folder ***merfish***. Need to be extracted firstly.
 
 
 ## 2.2 Data Preprocessing and Gaph Construction
 
-Run 'data_generation_merfish.py' to preprocess the raw data. 
+Run ***data_generation_merfish.py*** to preprocess the raw data. 
 
 `python data_generation_merfish.py`
 
-The pocessed data will be save in folder "generated_data". After that, there are 1368 cells with 1892 selected genes. Specificlly, the following five files will be used in CCST.
+The pocessed data will be save in folder ***generated_data***. After that, there are 1368 cells with 1892 selected genes. Specificlly, the following five files will be used in CCST.
 
 (1) ***features_array_after_removal_low_var.npy*** saves the preprocessed gene expression. Shape=(1368,1892)
 
@@ -73,7 +73,7 @@ The pocessed data will be save in folder "generated_data". After that, there are
 
 ## 2.3 Run CCST 
 
-Run 'CCST_merfish.py' for node clustering and differential expressed gene extracting. The meaning of each argument is listed below.
+Run ***CCST_merfish.py*** for node clustering and differential expressed gene extracting. The meaning of each argument is listed below.
 
 **--lambda_I**: the value of hyperparameter lambda, which should be within [0,1].
 
@@ -108,17 +108,17 @@ Run 'CCST_merfish.py' for node clustering and differential expressed gene extrac
 
 ## 2.4 Usage and Results analysis
 
-The trained model, embedding data and analysis results will be saved in folder "model", "embedding_data" and "results_CCST" by defult.
+The trained model, embedding data and analysis results will be saved in folder ***model***, ***embedding_data*** and ***results_CCST*** by defult.
 
-We provide the output of DGI in the folder "embedding_data". If you want to directly use it, run 
+We provide the output of DGI in the folder ***embedding_data***. If you want to directly use it, run 
 
  `python CCST_merfish --DGI 0.  `
 
-We provide the trained model of DGI in the folder "model". If you want to directly use it, run
+We provide the trained model of DGI in the folder ***model***. If you want to directly use it, run
 
  `python CCST_merfish --DGI 1 --load 1.  `
 
-All results are saved in the results folder. We provide our results in the folder "results_CCST" for taking further analysis. 
+All results are saved in the results folder. We provide our results in the folder ***results_CCST*** for taking further analysis. 
 
 (1) The cell clustering label are saved in ***types.txt***, where three colums refer to cell index, batch infomation and cell cluster label, respectively. 
 
