@@ -51,7 +51,13 @@ umap-learn==0.5.1
 
 2.1 Raw data is put in the folder "merfish". Need to be extracted firstly.
 
-2.2 Run 'data_generation_merfish.py' to preprocess the raw data. The pocessed data will be save in folder "generated_data".
+2.2 Run 'data_generation_merfish.py' to preprocess the raw data. The pocessed data will be save in folder "generated_data". After perpeocessing, there are 1368 cells with 1892 selected genes. specificlly, the following five files will be used in CCST.
+(1) features_array_after_removal_low_var.npy saves the preprocessed gene expression. Shape=(1368,1892)
+(2) Adjacent_200 saves the constructed adjacency matrix. Shape=(1368,1368)
+(3) cell_batch_info.npy saves the cell batch information of each cell. Length=1368 
+(4) gene_names_after_removal_low_var.txt saves names of selected genes.  Length=1892 
+(5) all_genes.txt saves names of all genes. length=12903
+
 
 2.3 Run 'CCST_merfish.py' for node clustering and differential expressed gene extracting. 
 
