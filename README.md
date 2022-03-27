@@ -58,7 +58,7 @@ Run 'data_generation_merfish.py' to preprocess the raw data.
 
 `python data_generation_merfish.py`
 
-The pocessed data will be save in folder "generated_data". After perpeocessing, there are 1368 cells with 1892 selected genes. specificlly, the following five files will be used in CCST.
+The pocessed data will be save in folder "generated_data". After perpeocessing, there are 1368 cells with 1892 selected genes. Specificlly, the following five files will be used in CCST.
 
 (1) *features_array_after_removal_low_var.npy* saves the preprocessed gene expression. Shape=(1368,1892)
 
@@ -118,7 +118,15 @@ We provide the trained model of DGI in the folder "model". If you want to direct
 
  `python CCST --DGI 1 --load 1.  `
 
-All results are saved in the results folder. We provide our results in the folder "results_CCST" for taking further analysis. The cell clustering label are saved in types.txt, where three colums refer to cell index, batch infomation and cell cluster label, respectively. The barplot of the neighborhood ratio is shown in fig barplot_subx.png. The spatial distribution of cells within each batch are illustrated in cluster_Batchx.png. The top-200 highly expressed genes of each cluster are listed in clusterx_gene_cur.txt.
+All results are saved in the results folder. We provide our results in the folder "results_CCST" for taking further analysis. 
+
+(1) The cell clustering label are saved in types.txt, where three colums refer to cell index, batch infomation and cell cluster label, respectively. 
+
+(2) The barplot of the neighborhood ratio is shown in fig barplot_subx.png. 
+
+(3) The spatial distribution of cells within each batch are illustrated in cluster_Batchx.png. 
+
+(4) The top-200 highly expressed genes of each cluster are listed in clusterx_gene_cur.txt.
 
 
 
