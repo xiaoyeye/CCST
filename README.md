@@ -60,50 +60,50 @@ Run 'data_generation_merfish.py' to preprocess the raw data.
 
 The pocessed data will be save in folder "generated_data". After that, there are 1368 cells with 1892 selected genes. Specificlly, the following five files will be used in CCST.
 
-(1) *features_array_after_removal_low_var.npy* saves the preprocessed gene expression. Shape=(1368,1892)
+(1) ***features_array_after_removal_low_var.npy*** saves the preprocessed gene expression. Shape=(1368,1892)
 
-(2) *Adjacent_200* saves the constructed adjacency matrix. Shape=(1368,1368)
+(2) ***Adjacent_200*** saves the constructed adjacency matrix. Shape=(1368,1368)
 
-(3) *cell_batch_info.npy* saves the cell batch information of each cell. Length=1368 
+(3) ***cell_batch_info.npy*** saves the cell batch information of each cell. Length=1368 
 
-(4) *gene_names_after_removal_low_var.txt* saves names of selected genes.  Length=1892 
+(4) ***gene_names_after_removal_low_var.txt*** saves names of selected genes.  Length=1892 
 
-(5) *all_genes.txt* saves names of all genes. length=12903
+(5) ***all_genes.txt*** saves names of all genes. length=12903
 
 
 ## 2.3 Run CCST 
 
 Run 'CCST_merfish.py' for node clustering and differential expressed gene extracting. The meaning of each argument is listed below.
 
---lambda_I: the value of hyperparameter lambda, which should be within [0,1].
+**--lambda_I**: the value of hyperparameter lambda, which should be within [0,1].
 
---DGI: whether to run the DGI (set to 1) or not (set to 0). 
+**--DGI**: whether to run the DGI (set to 1) or not (set to 0). 
 
---load：whether to load the pretrained DGI model (set to 1) or not (set to 0). 
+**--load**：whether to load the pretrained DGI model (set to 1) or not (set to 0). 
 
---num_epoch: the number of epoches in training DGI. 
+**--num_epoch**: the number of epoches in training DGI. 
 
---hidden: the dimension of each hidden layer. 
+**--hidden**: the dimension of each hidden layer. 
 
---cluster: whether to perform cluster (set to 1) or not (set to 0).
+**--cluster**: whether to perform cluster (set to 1) or not (set to 0).
 
---PCA: whether to perform PCA on the embeeding data (set to 1) or not (set to 0).
+**--PCA**: whether to perform PCA on the embeeding data (set to 1) or not (set to 0).
 
---n_clusters: the number of desired clusters.
+**--n_clusters**: the number of desired clusters.
 
---merge: whether to merge clustered groups with less than three cells into the closest group (set to 1) or not (set to 0).
+**--merge**: whether to merge clustered groups with less than three cells into the closest group (set to 1) or not (set to 0).
 
---draw_map: whether to draw the spatial distribution of cells (set to 1) or not (set to 0).
+**--draw_map**: whether to draw the spatial distribution of cells (set to 1) or not (set to 0).
 
---diff_gene: whether to take differential expressed gene analysis (set to 1) or not (set to 0).
+**--diff_gene**: whether to take differential expressed gene analysis (set to 1) or not (set to 0).
 
---calculate_score: whether to calculate the Silhouette score of clustering (set to 1) or not (set to 0).
+**--calculate_score**: whether to calculate the Silhouette score of clustering (set to 1) or not (set to 0).
 
---model_path: the path for saving model.
+**--model_path**: the path for saving model.
 
---embedding_data_path: the path for saving embedding data.
+**--embedding_data_path**: the path for saving embedding data.
 
---result_path: the path for saving results.
+**--result_path**: the path for saving results.
 
 
 ## 2.4 Usage and Results analysis
@@ -120,13 +120,13 @@ We provide the trained model of DGI in the folder "model". If you want to direct
 
 All results are saved in the results folder. We provide our results in the folder "results_CCST" for taking further analysis. 
 
-(1) The cell clustering label are saved in types.txt, where three colums refer to cell index, batch infomation and cell cluster label, respectively. 
+(1) The cell clustering label are saved in ***types.txt***, where three colums refer to cell index, batch infomation and cell cluster label, respectively. 
 
-(2) The barplot of the neighborhood ratio is shown in fig barplot_subx.png. 
+(2) The barplot of the neighborhood ratio is shown in fig ***barplot_subx.png***. 
 
-(3) The spatial distribution of cells within each batch are illustrated in cluster_Batchx.png. 
+(3) The spatial distribution of cells within each batch are illustrated in ***cluster_Batchx.png***. 
 
-(4) The top-200 highly expressed genes of each cluster are listed in clusterx_gene_cur.txt. They are sorted in the decent of significance.
+(4) The top-200 highly expressed genes of each cluster are listed in ***clusterx_gene_cur.txt***. They are sorted in the decent of significance.
 
 
 
