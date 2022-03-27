@@ -34,10 +34,8 @@ def get_adj(data_path):
 
             sheet_X = [item.value for item in list(worksheet.columns)[1]]
             sheet_X = sheet_X[1:]
-            sheet_X[sheet_X == ''] = 0.0
             sheet_Y = [item.value for item in list(worksheet.columns)[2]]
             sheet_Y = sheet_Y[1:]
-            sheet_Y[sheet_Y == ''] = 0.0
             sheet_X = np.array(sheet_X).astype(np.float)
             sheet_Y = np.array(sheet_Y).astype(np.float)
             #all_X = np.array([n for a in all_X for n in a]).astype(np.float)
