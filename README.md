@@ -58,17 +58,17 @@ Run ***data_generation_merfish.py*** to preprocess the raw data.
 
 `python data_generation_merfish.py`
 
-The pocessed data will be save in folder ***generated_data***. After that, there are 1368 cells with 1892 selected genes. Specificlly, the following five files will be used in CCST.
+The pocessed data will be save in folder ***generated_data***. Specificlly, the following five files will be used in CCST.
 
-(1) ***features_array_after_removal_low_var.npy*** saves the preprocessed gene expression. Shape=(1368,1892)
+(1) ***features_array_after_removal_low_var.npy*** saves the preprocessed gene expression. 
 
-(2) ***Adjacent_200*** saves the constructed adjacency matrix. Shape=(1368,1368)
+(2) ***Adjacent_200*** saves the constructed adjacency matrix.
 
-(3) ***cell_batch_info.npy*** saves the cell batch information of each cell. Length=1368 
+(3) ***cell_batch_info.npy*** saves the cell batch information of each cell.
 
-(4) ***gene_names_after_removal_low_var.txt*** saves names of selected genes.  Length=1892 
+(4) ***gene_names_after_removal_low_var.txt*** saves names of selected genes. 
 
-(5) ***all_genes.txt*** saves names of all genes. length=12903
+(5) ***all_genes.txt*** saves names of all genes.
 
 
 ## 2.3 Run CCST 
@@ -106,7 +106,7 @@ Run ***CCST_merfish.py*** for node clustering and differential expressed gene ex
 **--result_path**: the path for saving results.
 
 
-## 2.4 Usage and Results analysis
+## 2.4 Usage and Results Analysis
 
 The trained model, embedding data and analysis results will be saved in folder ***model***, ***embedding_data*** and ***results_CCST*** by defult.
 
