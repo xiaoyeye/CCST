@@ -45,20 +45,20 @@ umap-learn==0.5.1
 
 
 
-# 2. Intructions of usage: demo code is tested on MERFISH.
+# 2. Intructions: Demo on MERFISH.
 
 ## 2.1 Raw data 
 
 Raw data is put in the folder "merfish". Need to be extracted firstly.
 
 
-## 2.2 Data Preprocessing and Gaph construction
+## 2.2 Data Preprocessing and Gaph Construction
 
 Run 'data_generation_merfish.py' to preprocess the raw data. 
 
 `python data_generation_merfish.py`
 
-The pocessed data will be save in folder "generated_data". After perpeocessing, there are 1368 cells with 1892 selected genes. Specificlly, the following five files will be used in CCST.
+The pocessed data will be save in folder "generated_data". After that, there are 1368 cells with 1892 selected genes. Specificlly, the following five files will be used in CCST.
 
 (1) *features_array_after_removal_low_var.npy* saves the preprocessed gene expression. Shape=(1368,1892)
 
@@ -112,11 +112,11 @@ The trained model, embedding data and analysis results will be saved in folder "
 
 We provide the output of DGI in the folder "embedding_data". If you want to directly use it, run 
 
- `python CCST --DGI 0.  `
+ `python CCST_merfish --DGI 0.  `
 
 We provide the trained model of DGI in the folder "model". If you want to directly use it, run
 
- `python CCST --DGI 1 --load 1.  `
+ `python CCST_merfish --DGI 1 --load 1.  `
 
 All results are saved in the results folder. We provide our results in the folder "results_CCST" for taking further analysis. 
 
@@ -126,7 +126,7 @@ All results are saved in the results folder. We provide our results in the folde
 
 (3) The spatial distribution of cells within each batch are illustrated in cluster_Batchx.png. 
 
-(4) The top-200 highly expressed genes of each cluster are listed in clusterx_gene_cur.txt.
+(4) The top-200 highly expressed genes of each cluster are listed in clusterx_gene_cur.txt. They are sorted in the decent of significance.
 
 
 
