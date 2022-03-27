@@ -58,7 +58,7 @@ Run ***data_generation_merfish.py*** to preprocess the raw data.
 
 `python data_generation_merfish.py`
 
-The pocessed data will be save in folder ***generated_data***. Specificlly, the following five files will be used in CCST.
+We provide the pocessed data in folder ***generated_data***. You can also directly use it without runing ***data_generation_merfish.py***. Specificlly, the following five files will be used in CCST.
 
 (1) ***features_array_after_removal_low_var.npy*** saves the preprocessed gene expression. 
 
