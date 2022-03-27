@@ -11,11 +11,11 @@ The code is licensed under the MIT license.
 
 # 1. Requirements 
 
-1.1 Operating systems:
+## 1.1 Operating systems:
 
 The code in python has been tested on both linux (Ubuntu 16.04.6 LTS) and windows 10 system.
 
-1.2 Required packages in python: 
+## 1.2 Required packages in python: 
 
 numpy==1.19.2
 
@@ -49,9 +49,9 @@ umap-learn==0.5.1
 
 # 2. Intructions of usage: demo code is tested on MERFISH.
 
-2.1 Raw data is put in the folder "merfish". Need to be extracted firstly.
+## 2.1 Raw data is put in the folder "merfish". Need to be extracted firstly.
 
-2.2 Run 'data_generation_merfish.py' to preprocess the raw data. The pocessed data will be save in folder "generated_data". After perpeocessing, there are 1368 cells with 1892 selected genes. specificlly, the following five files will be used in CCST.
+## 2.2 Run 'data_generation_merfish.py' to preprocess the raw data. The pocessed data will be save in folder "generated_data". After perpeocessing, there are 1368 cells with 1892 selected genes. specificlly, the following five files will be used in CCST.
 
 (1) features_array_after_removal_low_var.npy saves the preprocessed gene expression. Shape=(1368,1892)
 
