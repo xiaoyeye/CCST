@@ -1,6 +1,6 @@
 # CCST：Cell clustering for spatial transcriptomics data with graph neural network 
 
-Taking advantages of two recent technical development, spatial transcriptomics and graph neural network, we  thus introduce CCST, Cell Clustering for Spatial Transcriptomics data with graph neural network, an unsupervised cell clustering method based on graph convolutional network to improve ab initio cell clustering and discovering of novel sub cell types based on curated cell category annotation. CCST is a general framework for dealing with various kinds of spatially resolved transcriptomics.
+Taking advantages of two recent technical development, spatial transcriptomics and graph neural network, we thus introduce CCST, Cell Clustering for Spatial Transcriptomics data with graph neural network, an unsupervised cell clustering method based on graph convolutional network to improve ab initio cell clustering and discovering of novel sub cell types based on curated cell category annotation. CCST is a general framework for dealing with various kinds of spatially resolved transcriptomics.
 
 Framework
 
@@ -13,7 +13,7 @@ The code is licensed under the MIT license.
 
 ## 1.1 Operating systems:
 
-The code in python has been tested on both linux (Ubuntu 16.04.6 LTS) and windows 10 system.
+The code in python has been tested on both Linux (Ubuntu 16.04.6 LTS) and windows 10 system.
 
 ## 1.2 Required packages in python: 
 
@@ -45,20 +45,20 @@ umap-learn==0.5.1
 
 
 
-# 2. Intructions: Demo on MERFISH.
+# 2. Instructions: Demo on MERFISH.
 
 ## 2.1 Raw data 
 
 Raw data is put in the folder ***merfish***. Need to be extracted firstly.
 
 
-## 2.2 Data Preprocessing and Gaph Construction
+## 2.2 Data Preprocessing and Graph Construction
 
 Run ***data_generation_merfish.py*** to preprocess the raw data. 
 
 `python data_generation_merfish.py`
 
-We provide the pocessed data in folder ***generated_data***. You can also directly use it without runing ***data_generation_merfish.py***. Specificlly, the following five files will be used in CCST.
+We provide the pocessed data in folder ***generated_data***. You can also directly use it without runing ***data_generation_merfish.py***. Specifically, the following five files will be used in CCST.
 
 (1) ***features_array_after_removal_low_var.npy*** saves the preprocessed gene expression. 
 
@@ -81,13 +81,13 @@ Run ***CCST_merfish.py*** for node clustering and differential expressed gene ex
 
 **--load**：whether to load the pretrained DGI model (set to 1) or not (set to 0). 
 
-**--num_epoch**: the number of epoches in training DGI. 
+**--num_epoch**: the number of epochs in training DGI. 
 
 **--hidden**: the dimension of each hidden layer. 
 
 **--cluster**: whether to perform cluster (set to 1) or not (set to 0).
 
-**--PCA**: whether to perform PCA on the embeeding data (set to 1) or not (set to 0).
+**--PCA**: whether to perform PCA on the embedding (set to 1) or not (set to 0).
 
 **--n_clusters**: the number of desired clusters.
 
@@ -108,7 +108,7 @@ Run ***CCST_merfish.py*** for node clustering and differential expressed gene ex
 
 ## 2.4 Usage and Results Analysis
 
-The trained model, embedding data and analysis results will be saved in folder ***model***, ***embedding_data*** and ***results_CCST*** by defult.
+The trained model, embedding data and analysis results will be saved in folder ***model***, ***embedding_data*** and ***results_CCST*** by default.
 
 We provide the output of DGI in the folder ***embedding_data***. If you want to directly use it, run 
 
@@ -120,7 +120,7 @@ We provide the trained model of DGI in the folder ***model***. If you want to di
 
 All results are saved in the results folder. We provide our results in the folder ***results_CCST*** for taking further analysis. 
 
-(1) The cell clustering label are saved in ***types.txt***, where three colums refer to cell index, batch infomation and cell cluster label, respectively. 
+(1) The cell clustering label are saved in ***types.txt***, where three columns refer to cell index, batch information and cell cluster label, respectively. 
 
 (2) The barplot of the neighborhood ratio is shown in fig ***barplot_subx.png***. 
 
@@ -135,15 +135,15 @@ All results are saved in the results folder. We provide our results in the folde
 
 3.1 MERFISH
 
-Data is avalieble at https://www.pnas.org/content/116/39/19490/tab-figures-data 
+Data is available at https://www.pnas.org/content/116/39/19490/tab-figures-data 
 
 3.2 DLPFC
 
-Data is avalieble at https://research.libd.org/spatialLIBD/
+Data is available at https://research.libd.org/spatialLIBD/
 
 3.3 SeqFISH+
 
-Data is avalieble at https://github.com/CaiGroup/seqFISH-PLUS. 
+Data is available at https://github.com/CaiGroup/seqFISH-PLUS. 
 
 3.4 10x Visium spatial transcriptomics data of human breast cancer
 
