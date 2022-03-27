@@ -54,7 +54,11 @@ Raw data is put in the folder "merfish". Need to be extracted firstly.
 
 ## 2.2 Data Preprocessing and Gaph construction
 
-Run 'data_generation_merfish.py' to preprocess the raw data. The pocessed data will be save in folder "generated_data". After perpeocessing, there are 1368 cells with 1892 selected genes. specificlly, the following five files will be used in CCST.
+Run 'data_generation_merfish.py' to preprocess the raw data. 
+
+`python data_generation_merfish.py`
+
+The pocessed data will be save in folder "generated_data". After perpeocessing, there are 1368 cells with 1892 selected genes. specificlly, the following five files will be used in CCST.
 
 (1) *features_array_after_removal_low_var.npy* saves the preprocessed gene expression. Shape=(1368,1892)
 
@@ -75,7 +79,7 @@ Run 'CCST_merfish.py' for node clustering and differential expressed gene extrac
 
 --DGI: whether to run the DGI (set to 1) or not (set to 0). 
 
---load： whether to load the pretrained DGI model (set to 1) or not (set to 0). 
+--load：whether to load the pretrained DGI model (set to 1) or not (set to 0). 
 
 --num_epoch: the number of epoches in training DGI. 
 
