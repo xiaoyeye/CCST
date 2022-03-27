@@ -11,11 +11,11 @@ The code is licensed under the MIT license.
 
 # 1. Requirements 
 
-1.1 Operating systems:
+## 1.1 Operating systems:
 
 The code in python has been tested on both linux (Ubuntu 16.04.6 LTS) and windows 10 system.
 
-1.2 Required packages in python: 
+## 1.2 Required packages in python: 
 
 numpy==1.19.2
 
@@ -43,7 +43,7 @@ openpyxl==3.0.7
 
 umap-learn==0.5.1
 
-1.3 GPU is required for training.
+## 1.3 GPU is required for training.
 
 
 
