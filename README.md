@@ -11,11 +11,11 @@ The code is licensed under the MIT license.
 
 # 1. Requirements 
 
-## 1.1 Operating systems:
+1.1 Operating systems:
 
 The code in python has been tested on both linux (Ubuntu 16.04.6 LTS) and windows 10 system.
 
-## 1.2 Required packages in python: 
+1.2 Required packages in python: 
 
 numpy==1.19.2
 
@@ -49,9 +49,9 @@ umap-learn==0.5.1
 
 # 2. Intructions of usage: demo code is tested on MERFISH.
 
-## 2.1 Raw data is put in the folder "merfish". Need to be extracted firstly.
+2.1 Raw data is put in the folder "merfish". Need to be extracted firstly.
 
-## 2.2 Run 'data_generation_merfish.py' to preprocess the raw data. The pocessed data will be save in folder "generated_data". After perpeocessing, there are 1368 cells with 1892 selected genes. specificlly, the following five files will be used in CCST.
+2.2 Run 'data_generation_merfish.py' to preprocess the raw data. The pocessed data will be save in folder "generated_data". After perpeocessing, there are 1368 cells with 1892 selected genes. specificlly, the following five files will be used in CCST.
 
 (1) features_array_after_removal_low_var.npy saves the preprocessed gene expression. Shape=(1368,1892)
 
@@ -64,11 +64,52 @@ umap-learn==0.5.1
 (5) all_genes.txt saves names of all genes. length=12903
 
 
-2.3 Run 'CCST_merfish.py' for node clustering and differential expressed gene extracting. 
+2.3 Run 'CCST_merfish.py' for node clustering and differential expressed gene extracting. The meaning of each argument is listed below.
+
+--lambda_I: the value of hyperparameter lambda, which should be within [0,1].
+
+--DGI: whether to run the DGI (set to 1) or not (set to 0). 
+
+--load： whether to load the pretrained DGI model (set to 1) or not (set to 0). 
+
+--num_epoch: the number of epoches in training DGI. 
+
+--hidden: the dimension of each hidden layer. 
+
+--cluster: whether to perform cluster (set to 1) or not (set to 0).
+
+--PCA: whether to perform PCA on the embeeding data (set to 1) or not (set to 0).
+
+--n_clusters: the number of desired clusters.
+
+--merge: whether to merge clustered groups with less than three cells into the closest group (set to 1) or not (set to 0).
+
+--draw_map: whether to draw the spatial distribution of cells (set to 1) or not (set to 0).
+
+--diff_gene: whether to take differential expressed gene analysis (set to 1) or not (set to 0).
+
+--calculate_score: whether to calculate the Silhouette score of clustering (set to 1) or not (set to 0).
+
+--model_path: the path for saving model.
+
+--embedding_data_path: the path for saving embedding data.
+
+--result_path: the path for saving results.
+
 
 2.4 The trained model, embedding data and analysis results will be saved in folder "model", "embedding_data" and "results_CCST" by defult.
 
-2.5 Run Time to use for training and clustering: 284 seconds on GPU RTX 3090. GPU Memory usage: 1635MiB 
+We provide the output of DGI in the folder "embedding_data". If you want to directly use it, run 
+
+'python CCST --DGI 0. '
+
+We provide the trained model of DGI in the folder "model". If you want to directly use it, run
+
+'python CCST --DGI 1 --load 1. '
+
+All results are saved in the results folder. We provide our results in the folder "results_CCST" for taking further analysis. The cell clustering label are saved in types.txt, where three colums refer to cell index, batch infomation and cell cluster label, respectively. The barplot of the neighborhood ratio is shown in fig barplot_subx.png. The spatial distribution of cells within each batch are illustrated in cluster_Batchx.png. The top-200 highly expressed genes of each cluster are listed in clusterx_gene_cur.txt.
+
+
 
 
 # 3. Download all datasets used in CCST:
