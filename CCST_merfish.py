@@ -14,7 +14,7 @@ from scipy import sparse
 
 import numpy as np
 import pickle
-
+import pandas as pd
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -24,15 +24,14 @@ from datetime import datetime
 
 rootPath = os.path.dirname(sys.path[0])
 os.chdir(rootPath+'/CCST')
-current_path = os.path.abspath('.')
-
 
 def get_data(lambda_I=0, Adjacent_threshold=200):
     data_path = 'generated_data/'
 
     with open(data_path + 'Adjacent_' + str(Adjacent_threshold), 'rb') as fp:
         adj_0 = pickle.load(fp)
-    X_data = np.load(data_path + 'features_array_after_removal_low_var.npy')
+    X_data = np.load(data_path + 'features_array_after_removal_low_var.npy') 
+    #features_array_normed features_array_after_removal_low_var
 
     num_points = X_data.shape[0]
     adj_I = np.eye(num_points)
@@ -107,6 +106,8 @@ def train_DGI(args, data_loader, in_channels):
         DGI_filename = args.model_path+'DGI_lambdaI_' + str(args.lambda_I) + '_epoch' + str(args.num_epoch) + '.pth.tar'
         DGI_model.load_state_dict(torch.load(DGI_filename))
     else:
+        import datetime
+        start_time = datetime.datetime.now()
         for epoch in range(args.num_epoch):
             DGI_model.train()
             DGI_optimizer.zero_grad()
@@ -125,15 +126,16 @@ def train_DGI(args, data_loader, in_channels):
             if ((epoch+1)%100) == 0:
                 print('Epoch: {:03d}, Loss: {:.4f}'.format(epoch+1, np.mean(DGI_all_loss)))
 
-            if ((epoch+1)%1000) == 0:
-                print('saving model at epoch ', epoch+1)
-                DGI_filename =  args.model_path+'DGI_lambdaI_' + str(args.lambda_I) + '_epoch' + str(epoch+1) + '.pth.tar'
-                torch.save(DGI_model.state_dict(), DGI_filename)
+        end_time = datetime.datetime.now()
+        DGI_filename =  args.model_path+'DGI_lambdaI_' + str(args.lambda_I) + '_epoch' + str(args.num_epoch) + '.pth.tar'
+        torch.save(DGI_model.state_dict(), DGI_filename)
+        print('Training time in seconds: ', (end_time-start_time).seconds)
     return DGI_model
 
 
-import umap
+
 def Umap(args, X, label, n_clusters, score, lambda_I):
+    import umap
     reducer = umap.UMAP(random_state=42)
     embedding = reducer.fit_transform(X)
 
@@ -147,8 +149,6 @@ def Umap(args, X, label, n_clusters, score, lambda_I):
     plt.close()
 
 
-import pandas as pd
-from mpl_toolkits.axes_grid1 import ImageGrid
 def draw_map(args, lambda_I, cell_batch_info, adj_0):
     f = open(args.result_path+'lambdaI' + str(lambda_I)+'/types.txt')            
     line = f.readline() # drop the first line  
@@ -166,11 +166,21 @@ def draw_map(args, lambda_I, cell_batch_info, adj_0):
     num_cell_batch = max(cell_batch_info) # start from 1
 
     import openpyxl
-    workbook = openpyxl.load_workbook(current_path+'/merfish/pnas.1912459116.sd15.xlsx')
+    workbook = openpyxl.load_workbook('merfish/pnas.1912459116.sd15.xlsx')
     start_cell_index = 0
-    import matplotlib.cm as cm
-    colors = cm.viridis(np.linspace(0, 1, n_clusters))
-    all_cluster = plt.scatter(x=np.arange(n_clusters), y=np.arange(n_clusters), s=100, c=np.arange(n_clusters))  
+    if n_clusters <=5:
+        all_colors_map = {0:'DarkBlue', 1:'orange', 2:'Crimson', 3:'green', 4:'yellow'}
+        colors_map={}
+        for tmp in range(n_clusters):
+            colors_map[tmp] = all_colors_map[tmp]
+        colors_list = list(colors_map.values()) #['blue', 'orange', 'yellow', 'green', 'Crimson']
+        clusters_name = []
+        for tmp in list(colors_map.keys()):
+            clusters_name.append('C'+str(tmp))
+    else:
+        import matplotlib.cm as cm
+        colors = cm.viridis(np.linspace(0, 1, n_clusters))
+        all_cluster = plt.scatter(x=np.arange(n_clusters), y=np.arange(n_clusters), s=100, c=np.arange(n_clusters))  
     plt.clf()
     for sheet_name in ['Batch 1', 'Batch 2', 'Batch 3']:
         worksheet = workbook[sheet_name]
@@ -183,11 +193,18 @@ def draw_map(args, lambda_I, cell_batch_info, adj_0):
         sheet_Y[sheet_Y == ''] = 0.0
         sheet_Y = np.array(sheet_Y)
         end_cell_index = start_cell_index + len(sheet_X)
+        cell_cluster_batch_list = cell_cluster_type_list[start_cell_index: end_cell_index]
 
         fig_name = 'lambdaI'+str(lambda_I) + '/cluster_'+ sheet_name.replace(' ','')
         plt.title(sheet_name)
-        sc_cluster = plt.scatter(x=sheet_X, y=sheet_Y, s=10, c=colors[cell_cluster_type_list[start_cell_index: end_cell_index]])  
-        cb_cluster = plt.colorbar(all_cluster, boundaries=np.arange(n_clusters+1)-0.5).set_ticks(np.arange(n_clusters))    
+        if n_clusters <=5:
+            from matplotlib.colors import ListedColormap
+            sc_all = plt.scatter(x=np.arange(n_clusters), y=np.arange(n_clusters), c=np.arange(n_clusters), cmap=ListedColormap(colors_list))    
+            sc_cluster = plt.scatter(x=sheet_X, y=sheet_Y, s=30, c=cell_cluster_batch_list, cmap=ListedColormap(colors_list))  
+            plt.legend(handles = sc_all.legend_elements()[0],labels=clusters_name, bbox_to_anchor=(1,0.8), loc='center left')  
+        else:
+            sc_cluster = plt.scatter(x=sheet_X, y=sheet_Y, s=10, c=colors[cell_cluster_batch_list])  
+            cb_cluster = plt.colorbar(all_cluster, boundaries=np.arange(n_clusters+1)-0.5).set_ticks(np.arange(n_clusters))    
         plt.xlabel('X')
         plt.ylabel('Y')
         plt.savefig(args.result_path+''+fig_name+'.png', dpi=400, bbox_inches='tight') 
@@ -201,6 +218,7 @@ def draw_map(args, lambda_I, cell_batch_info, adj_0):
     barplot = np.zeros([n_clusters, n_clusters], dtype=int)
     source_cluster_type_count = np.zeros(n_clusters, dtype=int)
     p1, p2 = adj_0.nonzero()
+
     def get_all_index(lst=None, item=''):
         return [i for i in range(len(lst)) if lst[i] == item]
 
@@ -227,8 +245,10 @@ def draw_map(args, lambda_I, cell_batch_info, adj_0):
 
     return 
 
+
 def get_gene():
-    genes_file = 'generated_data/gene_names_after_removal_low_var.txt'
+    genes_file = 'generated_data/gene_names_after_removal_low_var.txt'  
+    # gene_names_after_removal_low_var.txt  gene_names_after_removal_mean.txt
     genes = []
     f = open(genes_file)               
     line = f.readline()              
@@ -247,12 +267,54 @@ def test(data1, data2):
     # stat, p = ttest_ind(data1, data2, equal_var=False)
     return p
 
+def merge_cluser(X_embedding, cluster_labels):
+    count_dict, out_count_dict = {}, {}
+    for cluster in cluster_labels:
+        count_dict[cluster] = count_dict.get(cluster, 0) + 1
+    clusters = count_dict.keys()
+    n_clusters = len(clusters)
+    for cluster in clusters: 
+        out_count_dict[cluster] = count_dict[cluster] 
+    for cluster in clusters: 
+        cur_n = count_dict[cluster]
+        if cur_n <=3:
+            min_dis = 1000
+            merge_to = cluster
+            center_cluster = X_embedding[cluster_labels==cluster].mean(0)
+            for cluster_2 in clusters:
+                if cluster_2 == cluster:
+                    continue
+                center_cluster_2 = X_embedding[cluster_labels==cluster_2].mean(0)
+                dist = np.linalg.norm(center_cluster - center_cluster_2)
+                if dist < min_dis:
+                    min_dis = dist
+                    merge_to = cluster_2
+
+            cluster_labels[cluster_labels==cluster] = merge_to
+            print('Merge group', cluster, 'to group', merge_to, 'with', cur_n, 'samples')
+            out_count_dict[cluster] = 0
+            out_count_dict[merge_to] += cur_n
+            if cluster < n_clusters-1:
+                cluster_labels[cluster_labels==n_clusters-1] = cluster
+                print('Group', n_clusters-1, 'is renamed to group', cluster)
+                out_count_dict[cluster] = out_count_dict[n_clusters-1]
+                del out_count_dict[n_clusters-1]
+            print(out_count_dict)
+
+    return cluster_labels
+
+
 from sklearn.cluster import KMeans, DBSCAN, AffinityPropagation
-def Kmeans_cluster(X_embedding, n_clusters):
+def Kmeans_cluster(X_embedding, n_clusters, merge):
     cluster_model = KMeans(n_clusters=n_clusters, init='k-means++', n_init=100, max_iter=1000, tol=1e-6)
     cluster_labels = cluster_model.fit_predict(X_embedding)
+
+    # merge clusters with less than 3 cells
+    if merge:
+        cluster_labels = merge_cluser(X_embedding, cluster_labels)
+
     score = metrics.silhouette_score(X_embedding, cluster_labels, metric='euclidean')
-    #cluster_model.cluster_centers_
+    
     return cluster_labels, score
 
 
@@ -274,9 +336,8 @@ def main(args):
     print('Adj:', adj.shape, 'Edges:', len(adj.data))
     print('X:', X_data.shape)
 
-    n_clusters = 5 #num_cell_types
+    n_clusters = args.n_clusters #num_cell_types
 
-    time_0 = datetime.now() 
     if args.DGI:
         print("-----------Deep Graph Infomax-------------")
         data_list = get_graph(adj, X_data)
@@ -295,29 +356,50 @@ def main(args):
         X_embedding_filename =  args.embedding_data_path+'lambdaI' + str(lambda_I) + '_epoch' + str(args.num_epoch) + '_Embed_X.npy'
         X_embedding = np.load(X_embedding_filename)
 
-        from sklearn.decomposition import PCA
-        print('------PCA--------')
-        print('Shape of data to PCA:', X_embedding.shape)
+        if args.PCA:
+            from sklearn.decomposition import PCA
+            print('------PCA--------')
+            print('Shape of data to PCA:', X_embedding.shape)
 
-        pca = PCA(n_components=30)
-        X_embedding = pca.fit_transform(X_embedding)     #等价于pca.fit(X) pca.transform(X)
-        #inv_X = pca.inverse_transform(X_embedding) 
-        print('PCA recover:', pca.explained_variance_ratio_.sum())
+            pca = PCA(n_components=30)
+            X_embedding = pca.fit_transform(X_embedding)     #等价于pca.fit(X) pca.transform(X)
+            #inv_X = pca.inverse_transform(X_embedding) 
+            print('PCA recover:', pca.explained_variance_ratio_.sum())
 
         print('Shape of data to cluster:', X_embedding.shape)
 
-        cluster_labels, score = Kmeans_cluster(X_embedding, n_clusters) 
+        cluster_labels, score = Kmeans_cluster(X_embedding, n_clusters, args.merge) 
+        n_clusters = cluster_labels.max()+1
 
-        Umap(args, X_embedding, cluster_labels, n_clusters, score, lambda_I)
+        #Umap(args, X_embedding, cluster_labels, n_clusters, score, lambda_I)
         all_data = [] # txt: cell_id, cell batch, cluster type 
         for index in range(num_cell):
             all_data.append([index, cell_batch_info[index], cluster_labels[index]])
 
         np.savetxt(args.result_path+'lambdaI' +str(lambda_I)+'/types.txt', np.array(all_data), fmt='%3d', delimiter='\t')
 
-    time_1 = datetime.now() 
-    time_delta = (time_1-time_0).seconds
-    print('Training and clustering time in seconds: ', time_delta)
+
+    if args.merge:
+        X_embedding_filename =  args.embedding_data_path+'lambdaI' + str(lambda_I) + '_epoch' + str(args.num_epoch) + '_Embed_X.npy'
+        X_embedding = np.load(X_embedding_filename)
+        from sklearn.decomposition import PCA
+        pca = PCA(n_components=30)
+        X_embedding = pca.fit_transform(X_embedding)     #等价于pca.fit(X) pca.transform(X)
+
+        all_cate_info = np.loadtxt(args.result_path+'lambdaI'+str(lambda_I)+'/types.txt', dtype=int)
+        cluster_labels = []
+        for cate_info in all_cate_info:
+            cluster_labels.append(cate_info[2])
+        cluster_labels = np.array(cluster_labels)
+        cluster_labels = merge_cluser(X_embedding, cluster_labels)
+        n_clusters = max(cluster_labels)+1
+        
+        all_data = [] # txt: cell_id, cell batch, cluster type 
+        for index in range(num_cell):
+            all_data.append([index, cell_batch_info[index], cluster_labels[index]])
+
+        np.savetxt(args.result_path+'lambdaI' +str(lambda_I)+'/types.txt', np.array(all_data), fmt='%3d', delimiter='\t')
+
 
     if args.draw_map:
         print("-----------Drawing map-------------")
@@ -360,6 +442,7 @@ def main(args):
 
             num_diff_gene = 200
             num_gene = int(len(gene))
+            print('Cluster', i, '. Cell num:', cur_cate_num)
             min_p_index = pvalues_features.argsort()
             min_p = pvalues_features[min_p_index]
             min_p_gene = gene[min_p_index] # all candidate gene
@@ -398,33 +481,70 @@ def main(args):
             for m in range(len(gene_other_type)):
                 file_handle_1.write(gene_other_type[m]+'\n')
             file_handle_1.close()
+    
 
+    if args.calculate_score:
+        f = open(args.result_path+'lambdaI' + str(lambda_I)+'/types.txt')            
+        line = f.readline() # drop the first line  
+        cell_cluster_type_list = []
+
+        while line: 
+            tmp = line.split('\t')
+            cell_id = int(tmp[0]) # index start is start from 0 here
+            #cell_type_index = int(tmp[1])
+            cell_cluster_type = int(tmp[2].replace('\n', ''))
+            cell_cluster_type_list.append(cell_cluster_type)
+            line = f.readline() 
+        f.close() 
+        n_clusters = max(cell_cluster_type_list) + 1 # start from 0
+        cluster_labels=np.array(cell_cluster_type_list)
+
+        X_embedding_filename =  args.embedding_data_path+'lambdaI' + str(lambda_I) + '_epoch' + str(args.num_epoch) + '_Embed_X.npy'
+        X_embedding = np.load(X_embedding_filename)
+        if args.PCA:
+            from sklearn.decomposition import PCA
+            pca = PCA(n_components=30)
+            X_embedding = pca.fit_transform(X_embedding)  
+
+        score = metrics.silhouette_score(X_embedding, cluster_labels, metric='euclidean')
+        print('Silhouette score:', score)
+
+    return 
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument( '--lambda_I', default=0.8)
-    parser.add_argument( '--DGI', type=int, default=1, help='run DGI and cluster')
-    parser.add_argument( '--load', type=int, default=0, help='load pretrained DGI model')
-    parser.add_argument( '--embedding_data_path', type=str, default='embedding_data/') 
-    parser.add_argument( '--model_path', type=str, default='model/') 
-    parser.add_argument( '--num_epoch', type=int, default=5000, help='epoch in DGI')
-    parser.add_argument( '--hidden', type=int, default=256, help='hidden channels in DGI')    
-    parser.add_argument( '--cluster', type=int, default=1, help='run DGI and cluster')
+    parser.add_argument( '--lambda_I', default=0.8) #0.8
+    parser.add_argument( '--DGI', type=int, default=1, help='Run DGI')
+    parser.add_argument( '--load', type=int, default=1, help='Load pretrained DGI model')
+    parser.add_argument( '--num_epoch', type=int, default=5000, help='numebr of epoch in training DGI')
+    parser.add_argument( '--hidden', type=int, default=256, help='hidden channels in DGI')   
+    parser.add_argument( '--cluster', type=int, default=1, help='run cluster or not')
+    parser.add_argument( '--PCA', type=int, default=1, help='run PCA or not') 
+    parser.add_argument( '--n_clusters', type=int, default=5, help='run DGI and cluster') #5
+    parser.add_argument( '--merge', type=int, default=1, help='Merge cluster with less than 3 cells to the closest group') #5
     parser.add_argument( '--draw_map', type=int, default=1, help='run drawing map')
     parser.add_argument( '--diff_gene', type=int, default=1, help='run differential gene expression')
+    parser.add_argument( '--calculate_score', type=int, default=1, help='calculate silhouette score')
+    parser.add_argument( '--model_path', type=str, default='model/') 
+    parser.add_argument( '--embedding_data_path', type=str, default='Embedding_data/') 
     parser.add_argument( '--result_path', type=str, default='results_CCST/') 
+    parser.add_argument( '--save_name', type=str, default='') 
     args = parser.parse_args() 
 
+    args.embedding_data_path = args.embedding_data_path.replace('/', args.save_name) +'/'
+    args.model_path = args.model_path.replace('/', args.save_name)+'/'
+    args.result_path = args.result_path.replace('/', args.save_name)+'/'
     if not os.path.exists(args.embedding_data_path):
         os.makedirs(args.embedding_data_path) 
     if not os.path.exists(args.model_path):
         os.makedirs(args.model_path) 
 
-
+    
     path = args.result_path+'lambdaI'+str(args.lambda_I)
     if not os.path.exists(path):
         os.makedirs(path) 
     print ('------------------------Model and Training Details--------------------------')
     print(args) 
     main(args)
+    
