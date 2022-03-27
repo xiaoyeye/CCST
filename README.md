@@ -101,11 +101,11 @@ umap-learn==0.5.1
 
 We provide the output of DGI in the folder "embedding_data". If you want to directly use it, run 
 
-'python CCST --DGI 0. '
+~python CCST --DGI 0. ~
 
 We provide the trained model of DGI in the folder "model". If you want to directly use it, run
 
-'python CCST --DGI 1 --load 1. '
+~python CCST --DGI 1 --load 1. ~
 
 All results are saved in the results folder. We provide our results in the folder "results_CCST" for taking further analysis. The cell clustering label are saved in types.txt, where three colums refer to cell index, batch infomation and cell cluster label, respectively. The barplot of the neighborhood ratio is shown in fig barplot_subx.png. The spatial distribution of cells within each batch are illustrated in cluster_Batchx.png. The top-200 highly expressed genes of each cluster are listed in clusterx_gene_cur.txt.
 
