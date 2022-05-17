@@ -49,7 +49,7 @@ umap-learn==0.5.1
 
 ## 2.1 Raw data 
 
-Raw data is put in the folder ***merfish***. Need to be extracted firstly.
+Raw data is put in the folder ***merfish***, which is downloaded from https://www.pnas.org/content/116/39/19490/tab-figures-data. Need to be extracted firstly.
 
 
 ## 2.2 Data Preprocessing and Graph Construction
@@ -136,7 +136,6 @@ All results are saved in the results folder. We provide our results in the folde
 3.1 MERFISH
 
 Data is available at https://www.pnas.org/content/116/39/19490/tab-figures-data 
-We also put it in the folder "merfish".
 
 3.2 DLPFC
 
