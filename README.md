@@ -136,6 +136,7 @@ All results are saved in the results folder. We provide our results in the folde
 3.1 MERFISH
 
 Data is available at https://www.pnas.org/content/116/39/19490/tab-figures-data 
+We also put it in the folder "merfish".
 
 3.2 DLPFC
 
