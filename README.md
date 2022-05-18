@@ -54,9 +54,9 @@ Raw data should be placed in the folder ***dataset***.
 
 we put the MERFISH dataset, which is downloaded from https://www.pnas.org/content/116/39/19490/tab-figures-data, in ***dataset/MERFISH***. Need to be extracted firstly.
 
-For 10x Spatial Transcripts (ST) datasets, taking V1_Breast_Cancer_Block_A_Section_1 for instance. Files should be put in the following structure, which is the same with that provided by 10x website.
+For 10x Spatial Transcripts (ST) datasets, files should be put in the same structure with that provided by 10x website. Taking V1_Breast_Cancer_Block_A_Section_1 for instance:
 
-> V1_Breast_Cancer_Block_A_Section_1/ 
+> dataset/V1_Breast_Cancer_Block_A_Section_1/ 
   >> spatial/  # The folder where files for spatial information can be found 
   
   >> metadata.tsv # mainly for annotation
@@ -66,30 +66,48 @@ For 10x Spatial Transcripts (ST) datasets, taking V1_Breast_Cancer_Block_A_Secti
 
 ## 2.2 Data Preprocessing and Graph Construction
 
-Run ***data_generation_merfish.py*** to preprocess the raw data. 
+Run ***data_generation_merfish.py*** to preprocess the raw MERFISH data:
 
 `python data_generation_merfish.py`
 
-We provide the pocessed data in folder ***generated_data***. You can also directly use it without runing ***data_generation_merfish.py***. Specifically, the following five files will be used in CCST.
+For dealing other single cell datasets (e.g. seqFISH+), please modify the Arguments to change the path of input files, and the codes for dataset loading if required. 
 
-(1) ***features_array_after_removal_low_var.npy*** saves the preprocessed gene expression. 
+Augments:
+**--gene_expression_path**: the path to gene expression file.
 
-(2) ***Adjacent_200*** saves the constructed adjacency matrix.
+**--spatial_location_path**: the path to cell location file.
 
-(3) ***cell_batch_info.npy*** saves the cell batch information of each cell.
 
-(4) ***gene_names_after_removal_low_var.txt*** saves names of selected genes. 
 
-(5) ***all_genes.txt*** saves names of all genes.
+Run ***data_generation_ST.py*** to preprocess the raw 10x ST data:
+
+`python data_generation_ST.py`
+
+For dealing other 10x ST datasets, please modify the Arguments to change the data name. 
+
+Augments:
+**--data_name**: the name of 10x ST dataset. Files need to be put in the required structure.
+
+
+
+We provide the pocessed data in folder ***generated_data*** for both MERFISH and V1_Breast_Cancer_Block_A_Section_1 dataset. You can also directly use it without runing data preprocessing. Specifically, the following five files will be used in CCST.
+
+(1) ***features.npy*** saves the preprocessed gene expression. 
+
+(2) ***Adjacent*** saves the constructed adjacency matrix.
+
 
 
 ## 2.3 Run CCST 
 
-Run ***CCST_merfish.py*** for node clustering and differential expressed gene extracting. The meaning of each argument is listed below.
+The CCST model is implemented in ***CCST.py***. We give examples on both MERFISH and 10x ST datasets. When running CCST, the data type need to be firstly specified, so that the dataloader and image plotting functions can be load accordingly. 
 
-**--lambda_I**: the value of hyperparameter lambda, which should be within [0,1].
+Run ***run_CCST.py*** for runing CCST. The meaning of each argument is listed below.
+**--data_type**: specify whether the dataset is in single cell resolution (e.g. MERFISH) or non single cell resolution(e.g. ST)'
 
-**--DGI**: whether to run the DGI (set to 1) or not (set to 0). 
+**--lambda_I**: the value of hyperparameter lambda for intracellular (gene) and extracellular (spatial) information balance, which should be within [0,1]. 
+
+**--DGI**: whether to run the Deep Graph Infomax (DGI) model (set to 1) or not (set to 0). 
 
 **--load**：whether to load the pretrained DGI model (set to 1) or not (set to 0). 
 
@@ -97,19 +115,15 @@ Run ***CCST_merfish.py*** for node clustering and differential expressed gene ex
 
 **--hidden**: the dimension of each hidden layer. 
 
-**--cluster**: whether to perform cluster (set to 1) or not (set to 0).
+**--cluster**: whether to perform cluster (set to 1) or not (set to 0). If set to 0, the model will only conduct node embedding without further clustering.
 
 **--PCA**: whether to perform PCA on the embedding (set to 1) or not (set to 0).
 
 **--n_clusters**: the number of desired clusters.
 
-**--merge**: whether to merge clustered groups with less than three cells into the closest group (set to 1) or not (set to 0).
-
 **--draw_map**: whether to draw the spatial distribution of cells (set to 1) or not (set to 0).
 
 **--diff_gene**: whether to take differential expressed gene analysis (set to 1) or not (set to 0).
-
-**--calculate_score**: whether to calculate the Silhouette score of clustering (set to 1) or not (set to 0).
 
 **--model_path**: the path for saving model.
 
@@ -120,25 +134,31 @@ Run ***CCST_merfish.py*** for node clustering and differential expressed gene ex
 
 ## 2.4 Usage and Results Analysis
 
-The trained model, embedding data and analysis results will be saved in folder ***model***, ***embedding_data*** and ***results_CCST*** by default.
+The trained model, embedding data and analysis results will be saved in folder ***model***, ***embedding_data*** and ***results*** by default.
 
 We provide the output of DGI in the folder ***embedding_data***. If you want to directly use it, run 
 
- `python CCST_merfish --DGI 0.  `
+ `python run_CCST --data_type sc --data_name MERFISH --lambda_I 0.8 --DGI 0.  ` on MERFISH and
+ `python run_CCST --data_type nsc --data_name V1_Breast_Cancer_Block_A_Section_1 --lambda_I 0.3 --DGI 0.  ` on V1_Breast_Cancer_Block_A_Section_1.
 
 We provide the trained model of DGI in the folder ***model***. If you want to directly use it, run
 
- `python CCST_merfish --DGI 1 --load 1.  `
+ `python run_CCST --data_type sc --data_name MERFISH --lambda_I 0.8 --DGI 1 --load 1.  ` on MERFISH and
+ `python run_CCST --data_type nsc --data_name V1_Breast_Cancer_Block_A_Section_1 --lambda_I 0.3 --DGI 1 --load 1.  ` on V1_Breast_Cancer_Block_A_Section_1.
+ 
+For training your own model, run
 
-All results are saved in the results folder. We provide our results in the folder ***results_CCST*** for taking further analysis. 
+ `python run_CCST --data_type sc --data_name MERFISH --lambda_I 0.8 --DGI 1 --load 0.  ` on MERFISH and
+ `python run_CCST --data_type nsc --data_name V1_Breast_Cancer_Block_A_Section_1 --lambda_I 0.3 --DGI 1 --load 0.  ` on V1_Breast_Cancer_Block_A_Section_1.
+ 
 
-(1) The cell clustering label are saved in ***types.txt***, where three columns refer to cell index, batch information and cell cluster label, respectively. 
+All results are saved in the results folder. We provide our results in the folder ***results*** for taking further analysis. 
 
-(2) The barplot of the neighborhood ratio is shown in fig ***barplot_subx.png***. 
+(1) The cell clustering labels are saved in ***types.txt***, where the first column refers to cell index, and the last column refers to cell cluster label. 
 
-(3) The spatial distribution of cells within each batch are illustrated in ***cluster_Batchx.png***. 
+(3) The spatial distribution of cells within each batch are illustrated in ***.png*** files. 
 
-(4) The top-200 highly expressed genes of each cluster are listed in ***clusterx_gene_cur.txt***. They are sorted in the decent of significance.
+(4) On MERFISH dataset, the top-200 highly expressed genes of each cluster are listed in ***clusterx_gene_cur.txt***. They are sorted in the decent of statistical significance.
 
 
 
