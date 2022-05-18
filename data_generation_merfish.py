@@ -1,5 +1,6 @@
 #import pandas as pd
 import numpy as np
+import openpyxl
 #import seaborn as sns
 #from collections import defaultdict
 import matplotlib
@@ -17,12 +18,11 @@ import scipy.linalg
 rootPath = os.path.dirname(sys.path[0])
 os.chdir(rootPath+'/CCST')
 
-generated_data_path = 'generated_data/'
-if not os.path.exists(generated_data_path):
-    os.makedirs(generated_data_path) 
+
     
-def get_adj(data_path):
-    import openpyxl
+def get_adj(data_path, generated_data_path):
+    # this part is specifically designed for the demo merfish dataset. 
+    # For other datasets, please change the sheet name accordingly.
     if 1:
         workbook = openpyxl.load_workbook(data_path)
         distance_matrix_list = [] 
@@ -95,20 +95,21 @@ def get_adj(data_path):
         ############### get normalized sparse adjacent matrix
         distance_matrix_threshold_I_N = np.float32(whole_distance_matrix_threshold_I) ## do not normalize adjcent matrix
         distance_matrix_threshold_I_N_crs = sparse.csr_matrix(distance_matrix_threshold_I_N)
-        with open( generated_data_path + 'Adjacent_'+str(threshold), 'wb') as fp:
+        with open( generated_data_path + 'Adjacent', 'wb') as fp:
             pickle.dump(distance_matrix_threshold_I_N_crs, fp)
         
 
 
-def get_attribute(data_path):
-    # attribute 
+def get_attribute(data_path, generated_data_path):
+    # this part is specifically designed for the demo merfish dataset. 
+    # For other datasets, please modify the 'B1', 'B2', 'B3'.
     all_data = np.loadtxt(data_path, str, delimiter = ",")
     all_features = all_data[1:, 1: ]
     all_features[all_features == ''] = 0.0
     all_features = all_features.astype(np.float)
     all_features = np.swapaxes(all_features, 0, 1)
     print('feature shape: ', all_features.shape)
-    np.save( generated_data_path + 'features_array.npy', all_features)
+    np.save( generated_data_path + 'features.npy', all_features)
 
     all_features_batch_1, all_features_batch_2, all_features_batch_3 = [], [], []
 
@@ -129,7 +130,7 @@ def get_attribute(data_path):
     return all_features, all_features_all_batch
 
 
-def get_all_gene(p):
+def get_all_gene(p, generated_data_path):
     import csv
     with open(p, encoding = 'utf-8') as f:
         all_gene_names = np.loadtxt(f, str, delimiter = ",")[1:, 0]
@@ -141,24 +142,24 @@ def get_all_gene(p):
     return all_gene_names
 
 
-def remove_low_gene(all_features_all_batch, all_gene_names):
-    all_features = np.load( generated_data_path + 'features_array.npy')
+def remove_low_gene(all_features_all_batch, all_gene_names, generated_data_path, thres=1):
+    all_features = np.load( generated_data_path + 'features.npy')
 
     each_feature_mean = all_features.mean(0)
     tmp_mean = np.arange(len(each_feature_mean))
-    indeces_after_removal = tmp_mean[each_feature_mean>=1]
+    indeces_after_removal = tmp_mean[each_feature_mean>=thres]
     features_after_removal = all_features[:,indeces_after_removal]
     gene_names_after_removal = all_gene_names[indeces_after_removal]
     print(features_after_removal.shape)
 
 
-    genes_file = generated_data_path+'gene_names_after_removal_mean.txt'
+    genes_file = generated_data_path+'gene_names.txt'
     file_handle=open(genes_file, mode='w')
     for gene_name in gene_names_after_removal:
         file_handle.write(gene_name+'\n')
     file_handle.close()
 
-    np.save( generated_data_path + 'features_array_after_removal_low_mean.npy', features_after_removal)
+    np.save( generated_data_path + 'features.npy', features_after_removal)
 
     features_all_batch_after_removal = []
     for all_features_each_batch in all_features_all_batch:
@@ -166,7 +167,7 @@ def remove_low_gene(all_features_all_batch, all_gene_names):
     return features_all_batch_after_removal, gene_names_after_removal
 
 
-def batch_correction(datasets, genes_list):
+def batch_correction(datasets, genes_list, generated_data_path):
     # List of datasets (matrices of cells-by-genes):
     #datasets = [ list of scipy.sparse.csr_matrix or numpy.ndarray ]
     # List of gene lists:
@@ -176,7 +177,6 @@ def batch_correction(datasets, genes_list):
 
     # Batch correction.
     corrected, _ = scanorama.correct(datasets, genes_lists)
-    np.save( generated_data_path + 'corrected_batches.npy', corrected)
 
     features_corrected = []
     for i, corrected_each_batch in enumerate(corrected):
@@ -186,12 +186,12 @@ def batch_correction(datasets, genes_list):
         else:
             features_corrected = np.vstack((features_corrected, corrected_each_batch.A))
     features_corrected = np.array(features_corrected)
-    np.save( generated_data_path + 'features_array_corrected.npy', features_corrected)
+    np.save( generated_data_path + 'features.npy', features_corrected)
     print('corrected size: ', features_corrected.shape)
     return features_corrected
 
     
-def normalization(features):
+def normalization(features, generated_data_path):
     node_num = features.shape[0]
     feature_num = features.shape[1]
     #max_in_each_node = features.max(1)
@@ -199,12 +199,12 @@ def normalization(features):
     sum_in_each_node = sum_in_each_node.reshape(-1, 1)
     sum_matrix = (np.repeat(sum_in_each_node, axis=1, repeats=feature_num))
     feature_normed = features/sum_matrix * 10000
-    np.save( generated_data_path + 'features_array_normed.npy', feature_normed)
+    np.save( generated_data_path + 'features.npy', feature_normed)
     return feature_normed
 
 
 
-def remove_low_var_gene(features_input, gene_names, thres=0.4): # thres=1
+def remove_low_var_gene(features_input, gene_names, generated_data_path, thres=0.4): 
     each_feature_var = features_input.var(0)
     tmp_var = np.arange(len(each_feature_var))
     indeces_after_removal = tmp_var[each_feature_var>=thres] 
@@ -212,28 +212,45 @@ def remove_low_var_gene(features_input, gene_names, thres=0.4): # thres=1
     gene_names_after_removal = gene_names[indeces_after_removal]
     print(features_after_removal.shape)
 
-    genes_file = generated_data_path+'gene_names_after_removal_low_var.txt'
+    genes_file = generated_data_path+'gene_names.txt'
     file_handle=open(genes_file, mode='w')
     for gene_name in gene_names_after_removal:
         file_handle.write(gene_name+'\n')
     file_handle.close()
 
-    np.save( generated_data_path + 'features_array_after_removal_low_var.npy', features_after_removal)
+    np.save( generated_data_path + 'features.npy', features_after_removal)
 
     return gene_names_after_removal
 
 
-def main():
+def main(args):
+    ## for default merfish dataset:
     # B1：645, B2:400, B3:323
-    
-    all_features, all_features_all_batch = get_attribute('merfish/pnas.1912459116.sd12.csv')
-    get_adj('merfish/pnas.1912459116.sd15.xlsx')
-    all_gene_names = get_all_gene('merfish/pnas.1912459116.sd12.csv')
+    # args.gene_expression_path = 'dataset/merfish/pnas.1912459116.sd12.csv'
+    # args.spatial_location_path = 'dataset/merfish/pnas.1912459116.sd15.xlsx'
+    all_features, all_features_all_batch = get_attribute(args.gene_expression_path, args.generated_data_path)
+    get_adj(args.spatial_location_path, args.generated_data_path)
+    all_gene_names = get_all_gene(args.gene_expression_path, args.generated_data_path)
 
-    features_all_batch_after_removal, gene_names_after_removal = remove_low_gene(all_features_all_batch, all_gene_names)
-    features_corrected = batch_correction(features_all_batch_after_removal, gene_names_after_removal)
-    normalized_features = normalization(features_corrected)
-    remove_low_var_gene(normalized_features, gene_names_after_removal)
+    features_all_batch_after_removal, gene_names_after_removal = remove_low_gene(all_features_all_batch, all_gene_names, args.generated_data_path, thres=args.min_gene)
+    if args.batch_correct:
+        features_corrected = batch_correction(features_all_batch_after_removal, gene_names_after_removal, args.generated_data_path)
+        normalized_features = normalization(features_corrected, args.generated_data_path)
+    else:
+        normalized_features = normalization(features_all_batch_after_removal, args.generated_data_path)        
+    remove_low_var_gene(normalized_features, gene_names_after_removal, args.generated_data_path, thres=args.min_gene_var)
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument( '--batch_correct', type=int, default=1, help='run batch correction or not')
+    parser.add_argument( '--min_gene', type=float, default=1, help='Lowly expressed genes whose mean value is lower than this threshold will be filtered out')
+    parser.add_argument( '--min_gene_var', type=float, default=0.4, help='Low variance genes whose variance value is lower than this threshold will be filtered out')
+    parser.add_argument( '--gene_expression_path', type=str, default='dataset/MERFISH/pnas.1912459116.sd12.csv', help='file path for gene expression')
+    parser.add_argument( '--spatial_location_path', type=str, default='dataset/MERFISH/pnas.1912459116.sd15.xlsx', help='file path for cell location')
+    parser.add_argument( '--generated_data_path', type=str, default='generated_data/MERFISH/', help='The folder that generated data will be put in')
+    args = parser.parse_args() 
+
+    if not os.path.exists(args.generated_data_path):
+        os.makedirs(args.generated_data_path) 
+    main(args)
