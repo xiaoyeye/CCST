@@ -80,6 +80,8 @@ Augments:
 
 
 
+
+
 Run ***data_generation_ST.py*** to preprocess the raw 10x ST data:
 
 `python data_generation_ST.py`
@@ -87,6 +89,7 @@ Run ***data_generation_ST.py*** to preprocess the raw 10x ST data:
 For dealing other 10x ST datasets, please modify the Arguments to change the data name. 
 
 Augments:
+
 **--data_name**: the name of 10x ST dataset. Files need to be put in the required structure.
 
 
