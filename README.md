@@ -43,13 +43,23 @@ openpyxl==3.0.7
 
 umap-learn==0.5.1
 
+stlearn==0.3.2
 
 
 # 2. Instructions: Demo on MERFISH.
 
 ## 2.1 Raw data 
 
-Raw data is put in the folder ***merfish***, which is downloaded from https://www.pnas.org/content/116/39/19490/tab-figures-data. Need to be extracted firstly.
+Raw data should be placed in the folder ***dataset***.
+
+we put the MERFISH dataset, which is downloaded from https://www.pnas.org/content/116/39/19490/tab-figures-data, in ***dataset/MERFISH***. Need to be extracted firstly.
+
+For 10x Spatial Transcripts (ST) datasets, taking V1_Breast_Cancer_Block_A_Section_1 for instance. Files should be put in the following structure, which is the same with that provided by 10x website.
+
+*--V1_Breast_Cancer_Block_A_Section_1 
+ *--spatial/  # The folder where files for spatial information can be found 
+ *--metadata.tsv # mainly for annotation
+ *--V1_Breast_Cancer_Block_A_Section_1_filtered_feature_bc_matrix.h5 # gene expression data
 
 
 ## 2.2 Data Preprocessing and Graph Construction
