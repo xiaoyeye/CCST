@@ -73,6 +73,7 @@ Run ***data_generation_merfish.py*** to preprocess the raw MERFISH data:
 For dealing other single cell datasets (e.g. seqFISH+), please modify the Arguments to change the path of input files, and the codes for dataset loading if required. 
 
 Augments:
+
 **--gene_expression_path**: the path to gene expression file.
 
 **--spatial_location_path**: the path to cell location file.
@@ -107,9 +108,9 @@ Run ***run_CCST.py*** for runing CCST. The meaning of each argument is listed be
 
 **--lambda_I**: the value of hyperparameter lambda for intracellular (gene) and extracellular (spatial) information balance, which should be within [0,1]. 
 
-**--DGI**: whether to run the Deep Graph Infomax (DGI) model (set to 1) or not (set to 0). 
+**--DGI**: whether to run the Deep Graph Infomax (DGI) model (set to 1) or directly load node embedding without utilizing DGI (set to 0).
 
-**--load**：whether to load the pretrained DGI model (set to 1) or not (set to 0). 
+**--load**：whether to load a pretrained DGI model (set to 1) or train a new model from the begining (set to 0). 
 
 **--num_epoch**: the number of epochs in training DGI. 
 
@@ -136,19 +137,22 @@ Run ***run_CCST.py*** for runing CCST. The meaning of each argument is listed be
 
 The trained model, embedding data and analysis results will be saved in folder ***model***, ***embedding_data*** and ***results*** by default.
 
-We provide the output of DGI in the folder ***embedding_data***. If you want to directly use it, run 
+We provide the learned cell embedding of the model in the folder ***embedding_data***. If you want to directly use it, run 
 
  `python run_CCST --data_type sc --data_name MERFISH --lambda_I 0.8 --DGI 0.  ` on MERFISH and
+ 
  `python run_CCST --data_type nsc --data_name V1_Breast_Cancer_Block_A_Section_1 --lambda_I 0.3 --DGI 0.  ` on V1_Breast_Cancer_Block_A_Section_1.
 
-We provide the trained model of DGI in the folder ***model***. If you want to directly use it, run
+We provide the trained model in the folder ***model***. If you want to directly use it, run
 
  `python run_CCST --data_type sc --data_name MERFISH --lambda_I 0.8 --DGI 1 --load 1.  ` on MERFISH and
+ 
  `python run_CCST --data_type nsc --data_name V1_Breast_Cancer_Block_A_Section_1 --lambda_I 0.3 --DGI 1 --load 1.  ` on V1_Breast_Cancer_Block_A_Section_1.
  
 For training your own model, run
 
  `python run_CCST --data_type sc --data_name MERFISH --lambda_I 0.8 --DGI 1 --load 0.  ` on MERFISH and
+ 
  `python run_CCST --data_type nsc --data_name V1_Breast_Cancer_Block_A_Section_1 --lambda_I 0.3 --DGI 1 --load 0.  ` on V1_Breast_Cancer_Block_A_Section_1.
  
 
