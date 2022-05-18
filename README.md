@@ -79,6 +79,7 @@ Augments:
 For dealing other single cell datasets (e.g. seqFISH+), please modify the Arguments to change the path of input files, and the codes for dataset loading if required. 
 
 
+---------------------------------------------------------------------------
 
 Run ***data_generation_ST.py*** to preprocess the raw 10x ST data:
 
@@ -91,6 +92,7 @@ Augments:
 
 For dealing other 10x ST datasets, please modify the Arguments to change the data name. 
 
+---------------------------------------------------------------------------
 
 We provide the pocessed data in folder ***generated_data*** for both MERFISH and V1_Breast_Cancer_Block_A_Section_1 dataset. You can also directly use it without runing data preprocessing. Specifically, the following five files will be used in CCST.
 
