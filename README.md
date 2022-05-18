@@ -58,8 +58,10 @@ For 10x Spatial Transcripts (ST) datasets, taking V1_Breast_Cancer_Block_A_Secti
 
 > V1_Breast_Cancer_Block_A_Section_1/ 
   >> spatial/  # The folder where files for spatial information can be found 
-             >> metadata.tsv # mainly for annotation
-             >> V1_Breast_Cancer_Block_A_Section_1_filtered_feature_bc_matrix.h5 # gene expression data
+  
+  >> metadata.tsv # mainly for annotation
+  
+  >> V1_Breast_Cancer_Block_A_Section_1_filtered_feature_bc_matrix.h5 # gene expression data
 
 
 ## 2.2 Data Preprocessing and Graph Construction
