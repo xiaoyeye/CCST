@@ -104,10 +104,13 @@ We provide the pocessed data in folder ***generated_data*** for both MERFISH and
 
 ## 2.3 Run CCST 
 
-The CCST model is implemented in ***CCST.py***. We give examples on both MERFISH and 10x ST datasets. When running CCST, the data type need to be firstly specified, so that the dataloader and image plotting functions can be load accordingly. 
+The CCST model is implemented in ***CCST.py***. We give examples on both MERFISH and 10x ST datasets. When running CCST, the data type need to be firstly specified, so that the dataloader and image plotting functions can be load accordingly. We show demos on MERFISH and V1_Breast_Cancer_Block_A_Section_1. For apllying CCST on other datasets, if the corresponding data preprocessing has been done, please modify the  **--data_type** and **--data_name** here.
 
-Run ***run_CCST.py*** for runing CCST. The meaning of each argument is listed below.
-**--data_type**: specify whether the dataset is in single cell resolution (e.g. MERFISH) or non single cell resolution(e.g. ST)'
+The meaning of each argument in ***run_CCST.py*** is listed below.
+
+**--data_type**: 'sc' or 'nsc'. To specify whether the dataset is in single cell resolution (e.g. MERFISH) or non single cell resolution(e.g. ST)
+
+**--data_name**: the name of dataset, which is utilized for locating the preprocessed data.
 
 **--lambda_I**: the value of hyperparameter lambda for intracellular (gene) and extracellular (spatial) information balance, which should be within [0,1]. 
 
@@ -136,7 +139,7 @@ Run ***run_CCST.py*** for runing CCST. The meaning of each argument is listed be
 **--result_path**: the path for saving results.
 
 
-## 2.4 Usage and Results Analysis
+## 2.4 Usage
 
 The trained model, embedding data and analysis results will be saved in folder ***model***, ***embedding_data*** and ***results*** by default.
 
@@ -166,6 +169,7 @@ All results are saved in the results folder. We provide our results in the folde
 (3) The spatial distribution of cells within each batch are illustrated in ***.png*** files. 
 
 (4) On MERFISH dataset, the top-200 highly expressed genes of each cluster are listed in ***clusterx_gene_cur.txt***. They are sorted in the decent of statistical significance.
+
 
 
 
