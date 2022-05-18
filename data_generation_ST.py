@@ -170,7 +170,7 @@ def main(args):
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument( '--min_cells', type=float, default=1, help='Lowly expressed genes which appear in fewer than this number of cells will be filtered out')
+    parser.add_argument( '--min_cells', type=float, default=5, help='Lowly expressed genes which appear in fewer than this number of cells will be filtered out')
     parser.add_argument( '--Dim_PCA', type=int, default=200, help='The output dimention of PCA')
     parser.add_argument( '--data_path', type=str, default='dataset/', help='The path to dataset')
     parser.add_argument( '--data_name', type=str, default='V1_Breast_Cancer_Block_A_Section_1', help='The name of dataset')
