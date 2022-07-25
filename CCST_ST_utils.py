@@ -243,16 +243,12 @@ def CCST_on_ST(args):
         X_embedding_filename =  args.embedding_data_path+'lambdaI' + str(lambda_I) + '_epoch' + str(args.num_epoch) + '_Embed_X.npy'
         X_embedding = np.load(X_embedding_filename)
 
-        X_embedding = PCA_process(X_embedding, nps=30)
-
-        #X_data_PCA = PCA_process(X_data, nps=X_embedding.shape[1])
-
-        # concate
-        #X_embedding = np.concatenate((X_embedding, X_data), axis=1)
-        
-        print('Shape of data to cluster:', X_embedding.shape)
-
-        if cluster_type == 'kmeans':
+        if cluster_type == 'kmeans':             
+            X_embedding = PCA_process(X_embedding, nps=30)
+            #X_data_PCA = PCA_process(X_data, nps=X_embedding.shape[1])
+            # concate
+            #X_embedding = np.concatenate((X_embedding, X_data), axis=1)
+            print('Shape of data to cluster:', X_embedding.shape)
             cluster_labels, score = Kmeans_cluster(X_embedding, n_clusters) 
         else:
             results_file = args.result_path + '/adata.h5ad'
