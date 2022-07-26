@@ -110,9 +110,12 @@ def get_type(args, cell_types, generated_data_fold):
         for old_index in types_idx:
             cell_types_relabel.append(relabel_map[old_index])
         
-    np.save(generated_data_fold+'cell_types.npy', np.array(cell_types_relabel))
-    np.savetxt(generated_data_fold+'types_dic.txt', np.array(types_dic_sorted), fmt='%s', delimiter='\t')
-
+        np.save(generated_data_fold+'cell_types.npy', np.array(cell_types_relabel))
+        np.savetxt(generated_data_fold+'types_dic.txt', np.array(types_dic_sorted), fmt='%s', delimiter='\t')
+    else:
+        np.save(generated_data_fold+'cell_types.npy', np.array(cell_types))
+        np.savetxt(generated_data_fold+'types_dic.txt', np.array(types_dic), fmt='%s', delimiter='\t')
+        
 
 def draw_map(generated_data_fold):
     coordinates = np.load(generated_data_fold + 'coordinates.npy')
@@ -145,7 +148,7 @@ def main(args):
     generated_data_fold = args.generated_data_path + args.data_name+'/'
     if not os.path.exists(generated_data_fold):
         os.makedirs(generated_data_fold)
-    adata_h5 = st.Read10X(path=data_fold, count_file=args.data_name+'_filtered_feature_bc_matrix.h5' )
+    adata_h5 = st.Read10X(path=data_fold, count_file=args.data_name+'_filtered_feature_bc_matrix.h5')
     print(adata_h5)
     #count = adata_h5.X 
     features = adata_preprocess(adata_h5, min_cells=args.min_cells, pca_n_comps=args.Dim_PCA)
